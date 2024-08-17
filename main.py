@@ -3,7 +3,7 @@ from random import randint
 
 pygame.init()#pygame atends evrything together to make it work
 
-width, height = 1000, 1200
+width, height = 600, 600
 fps = 80
 tile = 32
 
@@ -24,10 +24,10 @@ class MainBattleTank:
         self.rect=pygame.Rect(px, py, tile, tile)
         self.direct=direct
         self.moveSpeed=5
-        self.hp = 10000
+        self.hp = 10
         self.shottime=0
-        self.dmg=500
-        self.bs=1000
+        self.dmg=5
+        self.bs=5
         self.dlelaay=15
         self.keyLeft=keyList[0]
         self.keyRight=keyList[1]
@@ -75,28 +75,33 @@ class MainBattleTank:
         if self.hp<=0:
             objects.remove(self)
             print(self.color,'dead')
+
 class shell:
     def __init__(self,parent,px,py,dx,dy,dmmmmmmg):
         bullets.append(self)
-        self.parent=parent
-        self.px,self.py=px,py
+        self.parent = parent
+        self.px, self.py = px,py
         self.dx, self.dy = dx, dy
-        self.dooy=dmmmmmmg
+        self.dooy = dmmmmmmg
     def upd  (self):
         self.px+=self.dx
+        self.px += self.dx
         self.py += self.dy
         if self.px<0 or self.px>width or self.py<0 or self.py>height:
             bullets.remove(self)
         else:
             for obj in objects:
-                if obj !=self.parent and obj.rect.collidepoint(self.px,self.py):
+                if obj != self.parent and obj.rect.collidepoint(self.px,self.py):
+                    print("Bullet doing damage")
                     obj.dooy(self.dooy)
                     bullets.remove(self)
                     break
     def draww(self):
-        pygame.draw.circle(window,'yellow',(self.px,self.py),2)
+        center = (self.px, self.py)
+        pygame.draw.circle(window,'cyan',center,4)
+
 MainBattleTank('green', 100, 275, 0, (pygame.K_a, pygame.K_d, pygame.K_w, pygame.K_s, pygame.K_SPACE))
-MainBattleTank('yellow', 650, 275, 0, (pygame.K_LEFT, pygame.K_RIGHT, pygame.K_UP, pygame.K_DOWN, pygame.K_KP_ENTER))
+MainBattleTank('yellow', 650, 275, 0, (pygame.K_LEFT, pygame.K_RIGHT, pygame.K_UP, pygame.K_DOWN, pygame.K_RETURN))
 
 play = True
 while play:
