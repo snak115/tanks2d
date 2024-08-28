@@ -1,3 +1,4 @@
+
 import pygame
 from random import randint
 
@@ -27,7 +28,7 @@ class MainBattleTank:
         self.hp = 10
         self.shottime=0
         self.dmg=5
-        self.bs=5
+        self.bs=8
         self.dlelaay=15
         self.keyLeft=keyList[0]
         self.keyRight=keyList[1]
@@ -36,6 +37,7 @@ class MainBattleTank:
         self.keyShot=keyList[4]
 
     def update(self):
+        oldx,oldy=self.rect.topleft
         if keys[self.keyLeft]:
             self.rect.x -= self.moveSpeed
             self.direct = 3
@@ -48,6 +50,9 @@ class MainBattleTank:
         elif keys[self.keyDown]:
             self.rect.y += self.moveSpeed
             self.direct = 2
+        for obj in objects:
+            if obj!=self and self.rect.colliderect(obj.rect):
+                self.rect.topleft=oldx,oldy
         if self.rect.left < 0:
             self.rect.right = width
         elif self.rect.right > width:
@@ -100,8 +105,37 @@ class shell:
         center = (self.px, self.py)
         pygame.draw.circle(window,'cyan',center,4)
 
+class bariccades:
+    def __init__(self,px,py,size):
+        objects.append(self)
+        self.type='baricade'
+        self.rect=pygame.Rect(px,py,size,size)
+        self.hp=6
+    def update(self):
+        pass
+    def draw(self):
+        pygame.draw.rect(window,'green',self.rect)
+        pygame.draw.rect(window,'yellow',self.rect,2)
+    def dooy(self,valuey):
+        self.hp-=valuey
+        if self.hp<=0:
+            objects.remove(self)
+
 MainBattleTank('green', 100, 275, 0, (pygame.K_a, pygame.K_d, pygame.K_w, pygame.K_s, pygame.K_SPACE))
 MainBattleTank('yellow', 650, 275, 0, (pygame.K_LEFT, pygame.K_RIGHT, pygame.K_UP, pygame.K_DOWN, pygame.K_RETURN))
+
+for _ in range(50):
+    while True:
+        x=randint(0,width//tile-1)*tile
+        y=randint(0,height//tile-1)*tile
+        rect=pygame.Rect(x,y,tile,tile)
+        fined=False
+        for obj in objects:
+            if rect.colliderect(obj.rect):
+                fined=True
+        if not fined:
+            break
+    bariccades(x,y,tile)
 
 play = True
 while play:
@@ -126,5 +160,3 @@ while play:
     clock.tick(fps)
 
 pygame.quit()
-
-
